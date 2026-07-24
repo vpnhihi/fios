@@ -1,0 +1,18 @@
+Package: com.fios.faker
+Name: Fios Faker v3
+Version: 4.2.6-fios.3
+Architecture: iphoneos-arm64
+Maintainer: Fios
+Author: Fios
+Section: Tweaks
+Depends: firmware (>= 15.0)
+Replaces: com.ipfaker, com.changeinfoios.v3, com.changeinfoios.tweak, com.changeinfoios.app
+Filename: debs/com.fios.faker_4.2.6-fios.3_iphoneos-arm64.deb
+Size: 409424
+MD5sum: d23f6d81826d55f37adb21f5280e284b
+SHA1: b5de222458e7b3dd1bfd635df37870e76dd6c94d
+SHA256: 59196e5985b89b68530f889de03906a2fe012948a38c2a89cf0d75ed44b5a08f
+Description: Fios Faker v3. HIOS 4.2.6 engine + Sheet license B=Key E=Chay (no device bind).
+Homepage: https://github.com/vpnhihi/fios
+Depiction: https://vpnhihi.github.io/fios/
+
