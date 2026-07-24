@@ -5,12 +5,13 @@ Architecture: iphoneos-arm64
 Maintainer: Fios
 Author: Fios
 Section: Tweaks
-Depends: ellekit | mobilesubstrate, firmware (>= 15.0)
+Depends: firmware (>= 15.0)
 Filename: debs/com.fios.faker_4.2.6-fios.1_iphoneos-arm64.deb
 Size: 311432
 MD5sum: d3ed3cf017dfa683f88298a7635f2964
 SHA1: 5b0098a5910a268b7b430d0acdf09b1ddbdfc024
 SHA256: 2eb5e83ee23ce911bc31036ac763233f56dab6efccb10eb185b0774cb5b5bccd
-Description: Fios Faker v3 — device spoof (ChangeInfoIos 4.2.6). Sheet activate.
-Homepage: https://docs.google.com/spreadsheets/d/1cnfHaeZc1SfDCQZGWI4CDV3vXIT6kGxgCCbVwhPGyno/edit?gid=0#gid=0
+Description: Fios Faker v3. Device spoof engine ChangeInfoIos 4.2.6. Install then open Fios Faker v3 app.
+Homepage: https://github.com/vpnhihi/fios
+Depiction: https://vpnhihi.github.io/fios/
 
