@@ -1,17 +1,18 @@
 Package: com.fios.faker
 Name: Fios Faker v3
-Version: 4.2.6-fios.1
+Version: 4.2.6-fios.2
 Architecture: iphoneos-arm64
 Maintainer: Fios
 Author: Fios
 Section: Tweaks
 Depends: firmware (>= 15.0)
-Filename: debs/com.fios.faker_4.2.6-fios.1_iphoneos-arm64.deb
-Size: 311432
-MD5sum: d3ed3cf017dfa683f88298a7635f2964
-SHA1: 5b0098a5910a268b7b430d0acdf09b1ddbdfc024
-SHA256: 2eb5e83ee23ce911bc31036ac763233f56dab6efccb10eb185b0774cb5b5bccd
-Description: Fios Faker v3. Device spoof engine ChangeInfoIos 4.2.6. Install then open Fios Faker v3 app.
+Replaces: com.ipfaker, com.changeinfoios.v3, com.changeinfoios.tweak, com.changeinfoios.app
+Filename: debs/com.fios.faker_4.2.6-fios.2_iphoneos-arm64.deb
+Size: 219164
+MD5sum: 56d04f3fcab416e9d0f904a1a95d4f48
+SHA1: e9b4647e4067967d071cda7728c63ed6bd74f897
+SHA256: 5a6b92fab28b9c5c086b4b25c98d911eefc3fbf5d73c4537785c36401fb203bb
+Description: Fios Faker v3. Spoof ChangeInfoIos 4.2.6. Replaces iPFaker HIOS dylibs so Sileo install works.
 Homepage: https://github.com/vpnhihi/fios
 Depiction: https://vpnhihi.github.io/fios/
 
