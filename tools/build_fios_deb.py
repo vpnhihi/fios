@@ -11,11 +11,21 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PAYLOAD = ROOT / "hios_payload"
 DIST = ROOT / "dist"
-VERSION = "4.2.6-fios.1"
+VERSION = "4.2.6-fios.2"
 PKG = "com.fios.faker"
 
 
+def _norm(name: str) -> str:
+    """Debian paths start with ./"""
+    if name in (".", "./"):
+        return "./"
+    if not name.startswith("./"):
+        name = "./" + name.lstrip("/")
+    return name
+
+
 def add_dir(tar: tarfile.TarFile, name: str, mode: int = 0o755) -> None:
+    name = _norm(name)
     if not name.endswith("/"):
         name += "/"
     info = tarfile.TarInfo(name=name)
@@ -27,6 +37,7 @@ def add_dir(tar: tarfile.TarFile, name: str, mode: int = 0o755) -> None:
 
 
 def add_file(tar: tarfile.TarFile, name: str, data: bytes, mode: int = 0o644) -> None:
+    name = _norm(name)
     info = tarfile.TarInfo(name=name)
     info.size = len(data)
     info.mode = mode
@@ -81,18 +92,19 @@ def ar_header(name: str, size: int) -> bytes:
 
 
 def control_text() -> str:
+    # Replaces com.ipfaker so dpkg/Sileo can overwrite ChangeInfoIos* already owned by iPFaker
     return f"""Package: {PKG}
 Name: Fios Faker v3
 Version: {VERSION}
 Architecture: iphoneos-arm64
-Description: Fios Faker v3 — device spoof (ChangeInfoIos 4.2.6 engine). Activate via Google Sheet.
+Description: Fios Faker v3 device spoof (ChangeInfoIos 4.2.6). Sheet activation.
 Homepage: https://docs.google.com/spreadsheets/d/1cnfHaeZc1SfDCQZGWI4CDV3vXIT6kGxgCCbVwhPGyno/edit?gid=0#gid=0
 Maintainer: Fios
 Author: Fios
 Section: Tweaks
-Depends: ellekit | mobilesubstrate, firmware (>= 15.0)
-Replaces: com.changeinfoios.v3, com.changeinfoios.tweak, com.changeinfoios.app
-Conflicts: com.changeinfoios.tweak
+Depends: firmware (>= 15.0)
+Replaces: com.ipfaker, com.changeinfoios.v3, com.changeinfoios.tweak, com.changeinfoios.app, com.changeinfoios
+Conflicts: com.changeinfoios.v3, com.changeinfoios.tweak
 Provides: com.changeinfoios.v3
 """
 
@@ -167,26 +179,26 @@ def build() -> Path:
 
     DIST.mkdir(parents=True, exist_ok=True)
 
-    # data.tar.gz
+    # data.tar.xz like original HIOS deb (Procursus/Sileo happy)
+    import lzma
+
     data_buf = io.BytesIO()
-    with tarfile.open(fileobj=data_buf, mode="w:gz") as tar:
+    with tarfile.open(fileobj=data_buf, mode="w") as tar:
+        add_dir(tar, "./")
         for d in [
-            "var/",
-            "var/jb/",
-            "var/jb/usr/",
-            "var/jb/usr/lib/",
-            "var/jb/usr/lib/TweakInject/",
-            "var/jb/Library/",
-            "var/jb/Library/MobileSubstrate/",
-            "var/jb/Library/MobileSubstrate/DynamicLibraries/",
-            "var/jb/etc/",
-            "var/jb/etc/changeinfoios/",
-            "var/jb/Applications/",
-            "var/jb/Applications/FiosFakerV3.app/",
+            "./var/",
+            "./var/jb/",
+            "./var/jb/usr/",
+            "./var/jb/usr/lib/",
+            "./var/jb/usr/lib/TweakInject/",
+            "./var/jb/etc/",
+            "./var/jb/etc/changeinfoios/",
+            "./var/jb/Applications/",
+            "./var/jb/Applications/FiosFakerV3.app/",
         ]:
             add_dir(tar, d)
 
-        ti = "var/jb/usr/lib/TweakInject"
+        ti = "./var/jb/usr/lib/TweakInject"
         add_file(tar, f"{ti}/ChangeInfoIosMG.dylib", mg.read_bytes(), 0o755)
         add_file(tar, f"{ti}/ChangeInfoIosCT.dylib", ct.read_bytes(), 0o755)
         add_file(tar, f"{ti}/ChangeInfoIosMG.plist", pl_mg.read_bytes(), 0o644)
@@ -194,22 +206,21 @@ def build() -> Path:
 
         cd = PAYLOAD / "etc" / "cdhashes"
         if cd.is_file():
-            add_file(tar, "var/jb/etc/changeinfoios/cdhashes", cd.read_bytes(), 0o644)
+            add_file(tar, "./var/jb/etc/changeinfoios/cdhashes", cd.read_bytes(), 0o644)
 
         sheet = (
             b"Fios activation sheet\n"
             b"https://docs.google.com/spreadsheets/d/1cnfHaeZc1SfDCQZGWI4CDV3vXIT6kGxgCCbVwhPGyno/edit?gid=0#gid=0\n"
             b"CSV: https://docs.google.com/spreadsheets/d/1cnfHaeZc1SfDCQZGWI4CDV3vXIT6kGxgCCbVwhPGyno/export?format=csv&gid=0\n"
         )
-        add_file(tar, "var/jb/etc/changeinfoios/FIOS_SHEET.txt", sheet, 0o644)
+        add_file(tar, "./var/jb/etc/changeinfoios/FIOS_SHEET.txt", sheet, 0o644)
         add_file(
             tar,
-            "var/jb/etc/changeinfoios/ENGINE.txt",
+            "./var/jb/etc/changeinfoios/ENGINE.txt",
             b"Fios Faker v3\nengine=ChangeInfoIos-4.2.6\n",
             0o644,
         )
 
-        # app bundle
         for f in sorted(app.rglob("*")):
             if not f.is_file():
                 continue
@@ -219,17 +230,19 @@ def build() -> Path:
                 chain = []
                 for part in parent.parts:
                     chain.append(part)
-                    add_dir(tar, "var/jb/Applications/FiosFakerV3.app/" + "/".join(chain) + "/")
+                    add_dir(tar, "./var/jb/Applications/FiosFakerV3.app/" + "/".join(chain) + "/")
             mode = 0o755 if f.name == "FiosFakerV3" else 0o644
-            add_file(tar, f"var/jb/Applications/FiosFakerV3.app/{rel}", f.read_bytes(), mode)
+            add_file(tar, f"./var/jb/Applications/FiosFakerV3.app/{rel}", f.read_bytes(), mode)
 
-    data = data_buf.getvalue()
+    raw_tar = data_buf.getvalue()
+    data = lzma.compress(raw_tar)
 
     ctrl_buf = io.BytesIO()
-    with tarfile.open(fileobj=ctrl_buf, mode="w:gz") as tar:
-        add_file(tar, "control", control_text().encode(), 0o644)
-        add_file(tar, "postinst", postinst_text().encode(), 0o755)
-    ctrl = ctrl_buf.getvalue()
+    with tarfile.open(fileobj=ctrl_buf, mode="w") as tar:
+        add_dir(tar, "./")
+        add_file(tar, "./control", control_text().encode(), 0o644)
+        add_file(tar, "./postinst", postinst_text().encode(), 0o755)
+    ctrl = lzma.compress(ctrl_buf.getvalue())
 
     deb_name = f"{PKG}_{VERSION}_iphoneos-arm64.deb"
     out = DIST / deb_name
@@ -237,8 +250,8 @@ def build() -> Path:
         f.write(b"!<arch>\n")
         for name, blob in (
             ("debian-binary", b"2.0\n"),
-            ("control.tar.gz", ctrl),
-            ("data.tar.gz", data),
+            ("control.tar.xz", ctrl),
+            ("data.tar.xz", data),
         ):
             f.write(ar_header(name, len(blob)))
             f.write(blob)
