@@ -1,0 +1,11 @@
+{
+  "displayName": "Fios",
+  "productName": "Fios Faker v3",
+  "profile": "fios",
+  "sheetId": "1cnfHaeZc1SfDCQZGWI4CDV3vXIT6kGxgCCbVwhPGyno",
+  "sheetGid": "0",
+  "sheetUrl": "https://docs.google.com/spreadsheets/d/1cnfHaeZc1SfDCQZGWI4CDV3vXIT6kGxgCCbVwhPGyno/edit?gid=0#gid=0",
+  "sheetCsv": "https://docs.google.com/spreadsheets/d/1cnfHaeZc1SfDCQZGWI4CDV3vXIT6kGxgCCbVwhPGyno/export?format=csv&gid=0",
+  "engine": "ChangeInfoIos-4.2.6",
+  "source": "HIOS vendor/hios_426 + ChangeInfoIos-v3_4.2.6.deb"
+}

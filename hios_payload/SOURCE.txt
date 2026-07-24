@@ -1,0 +1,14 @@
+Fios / ChangeInfoIos import — 100% payload from HIOS
+====================================================
+Source deb : C:\Users\Pem\Downloads\ChangeInfoIos-v3_4.2.6_iphoneos-arm64.deb
+Sheet activate: https://docs.google.com/spreadsheets/d/1cnfHaeZc1SfDCQZGWI4CDV3vXIT6kGxgCCbVwhPGyno/edit?gid=0#gid=0
+Rebrand    : display Name/UI → Fios Faker v3
+Engine     : ChangeInfoIos MG+CT (paths unchanged for inject)
+
+Layout:
+  DEBIAN/           control scripts
+  dylibs/           ChangeInfoIos MG+CT
+  etc/cdhashes
+  app/FiosFakerV3.app/
+  root/             full data tree
+  ar/               original ar members
