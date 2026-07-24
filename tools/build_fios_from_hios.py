@@ -211,24 +211,24 @@ CSV (app/tool đọc):
 Sheet ID: `{SHEET_ID}`
 GID: `{SHEET_GID}`
 
-## Cột gợi ý (giống HZalo sheet license)
-| Cột | Ý nghĩa |
-|-----|---------|
-| A | STT |
-| B | TÀI KHOẢN |
-| C | MẬT KHẨU / KEY |
-| D | HẠN (số ngày) |
-| E | ID KHÁCH |
-| F | ID MÁY (trống = máy mới) |
-| G | TRẠNG THÁI: CHẠY / DỪNG |
-| H | SỬ DỤNG ĐẾN NGÀY |
+## Cột (đúng sheet Kích iPFaker)
+| Cột | Header | Bắt buộc | Ý nghĩa |
+|-----|--------|----------|---------|
+| A | STT | Không | Số thứ tự |
+| **B** | **Key** | **Có** | Key kích hoạt |
+| C | Hạn sử dụng | Không | Optional số ngày; trống = không giới hạn |
+| D | ID MÁY | **Không** | **Bỏ** — app không check |
+| **E** | **Tình trạng** | **Có** | `Chạy` / `Dừng` / `Out` |
+| F | GHI CHÚ | Không | Ghi chú shop |
 
-Share sheet: **Anyone with the link → Viewer** (hoặc editor nếu tự ghi máy).
+Shop chỉ cần: **B** = key · **E** = `Chạy`.
+
+Share sheet: **Anyone with the link → Viewer**.
 
 ## Ghi chú kỹ thuật
 - Payload engine vẫn là ChangeInfoIos dylib (path `/var/jb/etc/changeinfoios`, filter ChangeInfoIosMG/CT) để **không gãy inject**.
 - Tên hiển thị app / package = **Fios Faker v3**.
-- License HIOS gốc: `license.plist` + HWID local; sheet này là **trang kích hoạt Fios** (quản lý key/acc).
+- iPFaker license: chỉ **B + E**; HIOS gốc: `license.plist` + HWID local.
 
 Env (nếu dùng bridge PC):
 ```
